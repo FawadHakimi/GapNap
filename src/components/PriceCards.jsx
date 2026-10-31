@@ -5,9 +5,9 @@ import { fmtPrice } from '../utils/time';
 export default function PriceCards() {
   const { t } = useI18n();
   return (
-    <section>
+    <section className="section">
       <h2>{t('pricesTitle')}</h2>
-      <div className="cards">
+      <div className="grid3">
         {DURATIONS.map((d) => (
           <a key={d} className="card choice" href={`#/book?d=${d}`}>
             <span className="card-title">{t(`dur${d}`)}</span>

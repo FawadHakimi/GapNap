@@ -2,6 +2,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useI18n } from '../i18n/I18nContext';
 import { fmtPrice, fmtTime } from '../utils/time';
 import Logo from './Logo';
+import { roomOf } from '../config/venue';
 
 export default function Bill({ booking, onClose, closeLabel }) {
   const { t, fmtDate, fmtDateTime } = useI18n();
@@ -9,7 +10,7 @@ export default function Bill({ booking, onClose, closeLabel }) {
     ['bookingNo', booking.number],
     ['name', booking.name],
     ['phone', booking.phone],
-    ['bed', booking.bed],
+    ['bed', t('roomBed', { room: roomOf(booking.bed), bed: booking.bed })],
     ['date', fmtDate(booking.date, { dateStyle: 'full' })],
     ['time', `${fmtTime(booking.start)}–${fmtTime(booking.start + booking.duration)}`],
     ['duration', t(`dur${booking.duration}`)],
@@ -30,6 +31,7 @@ export default function Bill({ booking, onClose, closeLabel }) {
         <button type="button" className="btn" onClick={() => window.print()}>{t('print')}</button>
         <button type="button" className="btn primary" onClick={onClose}>{closeLabel}</button>
       </div>
+      <p className="center no-print"><a className="link" href={`#/support?b=${encodeURIComponent(booking.number)}`}>{t('needHelp')}</a></p>
     </section>
   );
 }

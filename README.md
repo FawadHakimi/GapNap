@@ -1,17 +1,20 @@
 # GapNap
 
-Booking and payment site for a university nap room: 12 beds, max 2 hours, no accounts. Payment is simulated; data is kept in localStorage by a fake async API.
+Nap room booking for KBTU students: 2 rooms, 40 beds, max 2 hours, no accounts. Payment is simulated; data is kept in localStorage by a fake async API.
 
 ## Pages (hash-based, no router library)
-- `#/` Home (landing page): hero, how it works, prices, live availability, hours.
-- `#/book` Booking and payment (4 steps). `#/book?d=60` opens with that duration chosen (step 1 done).
+- `#/` Home: hero, live availability, features, how it works, prices, address, FAQ.
+- `#/book` Booking and payment. `#/book?d=60` opens with that duration chosen.
 - `#/find` Find my bill.
+- `#/support` Support: contact buttons and a message form. `#/support?b=GN-...` prefills the booking number.
 
-Back button and refresh keep you on the same page. Hash links work on GitHub Pages.
+## Config files (edit these)
+- `src/config/config.js` prices, working hours, durations.
+- `src/config/venue.js` rooms, bed ranges (Room 1 = beds 1-20, Room 2 = 21-40), address in 3 languages.
+- `src/config/contacts.js` Telegram, WhatsApp, phone, email. Replace the placeholders. Empty value = button hidden.
 
 ## Logo
-Replace `src/assets/logo.svg` (used in the header, footer and bill) and `public/logo.svg` (favicon). The iPhone icon is `public/apple-touch-icon.png` (180x180 PNG).
-If you use a PNG instead, save it as `src/assets/logo.png` and change the import in `src/components/Logo.jsx`.
+Replace `src/assets/logo.svg` (header, footer, bill), `public/logo.svg` (favicon) and `public/apple-touch-icon.png` (180x180).
 
 ## Run locally
 ```
@@ -19,21 +22,10 @@ npm install
 npm run dev
 ```
 
-## Structure
-```
-src/api        fake API (localStorage)
-src/assets     logo
-src/components UI components
-src/config     prices, hours, beds
-src/i18n       EN / RU / KZ dictionaries + context
-src/utils      time, phone, hash route, storage migration
-src/styles     global.css
-```
-
 ## Deploy on GitHub Pages
-1. Create a GitHub repo and push this folder to branch `main`.
-2. Repo Settings > Pages > Source: **GitHub Actions**.
-3. Push again. `.github/workflows/deploy.yml` builds and publishes. `base: './'` in `vite.config.js` makes it work under `/repo-name/`.
+1. Push this folder to branch `main` of a GitHub repo.
+2. Settings > Pages > Source: **GitHub Actions**.
+3. The workflow in `.github/workflows/deploy.yml` builds and publishes. `base: './'` in `vite.config.js` makes hash links work under `/repo-name/`.
 
 ## Notes
-Old "naproom" localStorage data is copied to the new `gapnap_` keys on first load. Old `NR-` booking numbers can still be found; new ones start with `GN-`.
+Old saved data (12 beds) still loads; demo bookings for all 40 beds are added once. Demo wording for "2 rooms / 40 beds" in Russian assumes those numbers.

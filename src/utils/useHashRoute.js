@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { DURATIONS } from '../config/config';
 
-// '#/' home, '#/book' booking, '#/book?d=60' booking with duration, '#/find' find bill
+// '#/' home, '#/book', '#/book?d=60', '#/find', '#/support', '#/support?b=GN-20260101-0001'
 export function parseHash(hash) {
   const [path, query = ''] = hash.replace(/^#/, '').split('?');
-  const d = Number(new URLSearchParams(query).get('d'));
+  const params = new URLSearchParams(query);
+  const d = Number(params.get('d'));
+  const b = (params.get('b') || '').toUpperCase();
   return {
-    page: path === '/book' ? 'book' : path === '/find' ? 'find' : 'home',
+    page: ['/book', '/find', '/support'].includes(path) ? path.slice(1) : 'home',
     duration: DURATIONS.includes(d) ? d : null,
+    booking: /^[A-Z]{2}-\d{8}-\d{4}$/.test(b) ? b : '',
   };
 }
 

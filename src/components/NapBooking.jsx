@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '../i18n/I18nContext';
 import { BEDS, DAYS, DURATIONS, OPEN, CLOSE, STEP, PRICES } from '../config/config';
+import { roomOf } from '../config/venue';
 import { addDays, dateKey, fmtPrice, fmtTime, overlaps } from '../utils/time';
 import { getBookings, holdBed, releaseHold, createBooking } from '../api/napApi';
 import StepIndicator from './StepIndicator';
@@ -179,7 +180,7 @@ export default function NapBooking({ initialDuration = null }) {
           {avail.status === 'ready' && (
             <>
               <p className="muted">{t('bedsFree', { n: freeAt(start), total: BEDS })}</p>
-              <BedGrid beds={BED_NUMBERS} selected={bed} isBusy={(n) => isBusyAt(n, start)} onSelect={setBed} />
+              <BedGrid selected={bed} isBusy={(n) => isBusyAt(n, start)} onSelect={setBed} />
             </>
           )}
           <div className="actions">
@@ -196,7 +197,7 @@ export default function NapBooking({ initialDuration = null }) {
           <h2>{t('payTitle')}</h2>
           <HoldTimer expires={hold.expires} paused={busy} onExpire={handleExpire} />
           <div className="card summary">
-            <div className="row"><span className="muted">{t('bed')}</span><strong>{bed}</strong></div>
+            <div className="row"><span className="muted">{t('bed')}</span><strong>{t('roomBed', { room: roomOf(bed), bed })}</strong></div>
             <div className="row"><span className="muted">{t('date')}</span><strong>{fmtDate(date, { weekday: 'short', day: 'numeric', month: 'long' })}</strong></div>
             <div className="row"><span className="muted">{t('time')}</span><strong>{fmtTime(start)}–{fmtTime(start + duration)}</strong></div>
             <div className="row"><span className="muted">{t('total')}</span><strong>{fmtPrice(PRICES[duration])}</strong></div>

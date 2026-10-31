@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n/I18nContext';
 import { BEDS, OPEN, CLOSE } from '../config/config';
+import { ROOMS } from '../config/venue';
 import { dateKey, fmtTime, overlaps } from '../utils/time';
 import { getBookings } from '../api/napApi';
 import Spinner from './Spinner';
@@ -20,12 +21,12 @@ export default function LiveAvailability() {
     return () => { cancelled = true; };
   }, [reload]);
 
-  const hours = { from: fmtTime(OPEN), to: fmtTime(CLOSE) };
   const now = new Date();
   const nowMin = now.getHours() * 60 + now.getMinutes();
   const open = nowMin >= OPEN && nowMin < CLOSE;
-  const busyBeds = new Set(state.bookings.filter((x) => overlaps(nowMin, nowMin + 1, x.start, x.start + x.duration)).map((x) => x.bed));
-  const free = BEDS - busyBeds.size;
+  const busy = new Set(state.bookings.filter((x) => overlaps(nowMin, nowMin + 1, x.start, x.start + x.duration)).map((x) => x.bed));
+  const perRoom = ROOMS.map((r) => ({ id: r.id, free: r.to - r.from + 1 - [...busy].filter((b) => b >= r.from && b <= r.to).length }));
+  const free = BEDS - busy.size;
 
   let body;
   if (state.status === 'loading') body = <Spinner />;
@@ -35,13 +36,22 @@ export default function LiveAvailability() {
         {t('loadError')}
       </StatusMessage>
     );
-  } else if (!open) body = <StatusMessage kind="info">{t('liveClosed', hours)}</StatusMessage>;
+  } else if (!open) body = <StatusMessage kind="info">{t('liveClosed', { from: fmtTime(OPEN), to: fmtTime(CLOSE) })}</StatusMessage>;
   else if (free === 0) body = <StatusMessage kind="info">{t('liveFull')}</StatusMessage>;
-  else body = <p className="card live">{t('liveFree', { n: free, total: BEDS })}</p>;
-
+  else {
+    body = (
+      <div className="card live-card">
+        <div>
+          <p className="live">{t('liveFree', { n: free, total: BEDS })}</p>
+          <p className="muted small">{perRoom.map((r) => t('roomFree', { n: r.id, free: r.free })).join(' · ')}</p>
+        </div>
+        <a className="btn primary" href="#/book">{t('seeFree')}</a>
+      </div>
+    );
+  }
   return (
-    <section>
-      <h2>{t('liveTitle')}</h2>
+    <section className="section">
+      <h2 className="sr-only">{t('liveTitle')}</h2>
       {body}
     </section>
   );

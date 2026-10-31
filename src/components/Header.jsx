@@ -3,7 +3,7 @@ import { useI18n } from '../i18n/I18nContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import Logo from './Logo';
 
-const LINKS = [['home', '#/', 'navHome'], ['book', '#/book', 'navBook'], ['find', '#/find', 'navFind']];
+const LINKS = [['home', '#/', 'navHome'], ['book', '#/book', 'navBook'], ['find', '#/find', 'navFind'], ['support', '#/support', 'navSupport']];
 
 export default function Header({ page }) {
   const { t } = useI18n();

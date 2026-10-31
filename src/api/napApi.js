@@ -17,15 +17,15 @@ function bookingNumber(db, date) {
   return `GN-${date.replace(/-/g, '')}-${String(db.counter).padStart(4, '0')}`;
 }
 
-function seed() {
+// Adds 80+ demo bookings over the next 7 days across all beds.
+function addSeed(db) {
   const names = ['Aigerim', 'Daniyar', 'Madina', 'Ahmad', 'Alina', 'Timur', 'Dana', 'Arman'];
-  const db = { bookings: [], holds: [], counter: 0 };
   for (let day = 0; day < 7; day++) {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 12; i++) {
       const date = dateKey(addDays(new Date(), day));
       const duration = [30, 60, 120][(day + i) % 3];
-      const start = OPEN + ((day * 3 + i * 5) % 14) * 30;
-      const bed = ((day * 5 + i * 3) % BEDS) + 1;
+      const start = OPEN + ((day * 5 + i * 7) % 14) * 30;
+      const bed = ((day * 7 + i * 11) % BEDS) + 1;
       const b = { bed, date, start, duration };
       if (start + duration > CLOSE || conflicts(db, b)) continue;
       const number = bookingNumber(db, date);
@@ -34,22 +34,26 @@ function seed() {
         id: `S${db.counter}`,
         number,
         name: names[(day + i) % names.length],
-        phone: `+7 701 555 ${String(10 + db.counter).padStart(2, '0')} 00`,
+        phone: `+7 701 ${String(100 + db.counter).padStart(3, '0')} 00 00`,
         amount: PRICES[duration],
         paidAt: new Date().toISOString(),
       });
     }
   }
-  return db;
+  db.seedV2 = true;
 }
 
+// Old saved data (12 beds) still loads; the new demo bookings are added once.
 function load() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw);
-  } catch { /* fall through to seed */ }
-  const db = seed();
-  save(db);
+  let db = null;
+  try { db = JSON.parse(localStorage.getItem(KEY)); } catch { /* broken data: start fresh */ }
+  if (!db || !Array.isArray(db.bookings)) db = { bookings: [], holds: [], counter: 0 };
+  if (!Array.isArray(db.holds)) db.holds = [];
+  if (!db.counter) db.counter = 0;
+  if (!db.seedV2) {
+    addSeed(db);
+    save(db);
+  }
   return db;
 }
 function save(db) {
@@ -110,4 +114,21 @@ export async function findBooking(phone, number) {
   const p = normalizePhone(phone);
   const n = number.trim().toUpperCase();
   return load().bookings.find((b) => b.phone === p && b.number === n) ?? null;
+}
+
+const SUPPORT_KEY = 'gapnap_support';
+
+export async function sendSupportRequest(data) {
+  await wait();
+  if (Math.random() < 0.05) throw new Error('random'); // simulated rare failure
+  let store = { counter: 0, requests: [] };
+  try {
+    const raw = JSON.parse(localStorage.getItem(SUPPORT_KEY));
+    if (raw && Array.isArray(raw.requests)) store = raw;
+  } catch { /* start fresh */ }
+  store.counter += 1;
+  const number = `SP-${String(store.counter).padStart(4, '0')}`;
+  store.requests.push({ ...data, number, createdAt: new Date().toISOString() });
+  try { localStorage.setItem(SUPPORT_KEY, JSON.stringify(store)); } catch { /* ignore */ }
+  return { number };
 }
