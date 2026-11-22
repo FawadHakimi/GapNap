@@ -146,8 +146,54 @@ textarea.input { resize: vertical; font-family: inherit; }
 .msg-success { color: var(--ok); border: 1px solid var(--ok); }
 
 /* Home banner image: first thing on the home page */
-.home-banner { margin: 0 -16px; }
-.home-banner img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: cover; }
-@media (min-width: 720px) { .home-banner { margin: 16px 0 0; } .home-banner img { border-radius: 16px; } }
 .grid2 { display: grid; gap: 12px; }
 @media (min-width: 720px) { .grid2 { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== Home banner: rounded on every screen ===== */
+.home-banner { margin: 12px 0 0; }
+.home-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+}
+
+/* ===== Mobile polish ===== */
+.card { border-radius: 16px; }
+.btn { border-radius: 12px; }
+
+@media (max-width: 719px) {
+  .home-banner { margin-top: 8px; }
+  .home-banner img { border-radius: 16px; }
+
+  /* hero: tighter and easier to read on a phone */
+  .hero { padding: 24px 0 0; }
+  .hero h1 { font-size: 1.9rem; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; min-height: 52px; font-size: 1.05rem; }
+  .hero-actions .link { justify-content: center; }
+  .facts { flex-direction: column; align-items: center; gap: 6px; margin-top: 28px; }
+
+  /* less empty space between sections */
+  .section { margin-top: 36px; }
+  .section > h2 { font-size: 1.25rem; }
+
+  /* bigger, easier-to-tap price cards */
+  .choice { min-height: 72px; padding: 18px; }
+  .card-price { font-size: 1.15rem; }
+
+  /* booking buttons: full width and easy to tap */
+  .actions { flex-wrap: nowrap; }
+  .actions .btn { flex: 1; min-height: 50px; }
+
+  /* the final call-to-action button spans the screen */
+  .cta .btn { width: 100%; }
+}
+
+/* keep the footer clear of the iPhone home bar */
+.footer { padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+
+.header { position: sticky; top: 0; z-index: 10; background: var(--bg); }
