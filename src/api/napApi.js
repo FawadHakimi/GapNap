@@ -23,8 +23,8 @@ function addSeed(db) {
   for (let day = 0; day < 7; day++) {
     for (let i = 0; i < 12; i++) {
       const date = dateKey(addDays(new Date(), day));
-      const duration = [30, 60, 120][(day + i) % 3];
-      const start = OPEN + ((day * 5 + i * 7) % 14) * 30;
+      const duration = [60, 120][(day + i) % 2];
+      const start = OPEN + ((day * 5 + i * 7) % 9) * 60;
       const bed = ((day * 7 + i * 11) % BEDS) + 1;
       const b = { bed, date, start, duration };
       if (start + duration > CLOSE || conflicts(db, b)) continue;

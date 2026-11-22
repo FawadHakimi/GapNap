@@ -1,3 +1,4 @@
+import HomeBanner from './HomeBanner';
 import Hero from './Hero';
 import LiveAvailability from './LiveAvailability';
 import Features from './Features';
@@ -10,6 +11,7 @@ import FinalCta from './FinalCta';
 export default function Home() {
   return (
     <>
+      <HomeBanner />
       <Hero />
       <LiveAvailability />
       <Features />

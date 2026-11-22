@@ -35,8 +35,8 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
 .chip { flex: none; min-height: 44px; padding: 6px 16px; border: 1px solid var(--border); background: var(--bg); border-radius: 999px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; }
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-.time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
-@media (min-width: 720px) { .time-grid { grid-template-columns: repeat(6, 1fr); } }
+.time-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+@media (min-width: 720px) { .time-grid { grid-template-columns: repeat(4, 1fr); } }
 .chip.time { padding: 6px 4px; }
 
 .bed { min-height: 56px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; }
@@ -144,3 +144,10 @@ a.choice { justify-content: space-between; }
 .counter { text-align: right; margin: 4px 0 0; }
 textarea.input { resize: vertical; font-family: inherit; }
 .msg-success { color: var(--ok); border: 1px solid var(--ok); }
+
+/* Home banner image: first thing on the home page */
+.home-banner { margin: 0 -16px; }
+.home-banner img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: cover; }
+@media (min-width: 720px) { .home-banner { margin: 16px 0 0; } .home-banner img { border-radius: 16px; } }
+.grid2 { display: grid; gap: 12px; }
+@media (min-width: 720px) { .grid2 { grid-template-columns: repeat(2, 1fr); } }

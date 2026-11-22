@@ -165,7 +165,7 @@ export default function NapBooking({ initialDuration = null }) {
           {availState}
           {avail.status === 'ready' && (noSlots
             ? <StatusMessage kind="info">{t('noSlots')}</StatusMessage>
-            : <TimeGrid slots={slots} value={start} onChange={chooseStart} />)}
+            : <TimeGrid slots={slots} value={start} duration={duration} onChange={chooseStart} />)}
           <div className="actions">
             <button type="button" className="btn" onClick={() => setStep(1)}>{t('back')}</button>
             <button type="button" className="btn primary" disabled={start === null || avail.status !== 'ready'} onClick={goToBeds}>{t('next')}</button>

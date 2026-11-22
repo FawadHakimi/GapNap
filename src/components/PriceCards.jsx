@@ -7,7 +7,7 @@ export default function PriceCards() {
   return (
     <section className="section">
       <h2>{t('pricesTitle')}</h2>
-      <div className="grid3">
+      <div className="grid2">
         {DURATIONS.map((d) => (
           <a key={d} className="card choice" href={`#/book?d=${d}`}>
             <span className="card-title">{t(`dur${d}`)}</span>
